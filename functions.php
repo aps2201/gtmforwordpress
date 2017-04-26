@@ -1,7 +1,7 @@
 <?php
 /*
 	GTM Data Layer for Wordpress
-	by Julien Coquet
+	by Julien Coquet, modified by Andaru Pramudito Suhud
 	This function outputs a Google Tag Manager dataLayer JavaScript collection
 	within the HEAD HTML tag. You can then point to the variables within the 
 	collection using Google Tag Manager to power variables (macros) and triggers (rules).
@@ -15,7 +15,6 @@
 	Refer to the Wordpress Codex (knowledge base) at
 	https://codex.wordpress.org/Developer_Documentation
 */
-
 function dataLayer()
 {
   $gtmBuffer = ''; // initialize GTM dataLayer output
@@ -53,18 +52,18 @@ function dataLayer()
 	if ($gtm_cats){$gtm_catconcat=join(",",$gtm_cats);}else{$gtm_catconcat="";}
 	$gtmBuffer.= "\n
     'author': '" . get_the_author() . "',
+    'date': '" . get_the_date() . "',
     'postType': '" . get_post_type() . "',
     'postCategory': '" . $gtm_cat[0]->cat_name . "',
     'postCategories': '".$gtm_catconcat."',
-    'postTags': '" . addslashes(trim($gtm_tags)) . "',";
-  }
-  $gtmBuffer.= "\n'terminator': 'I\'ll be back' // Always terminate your arrays!
+    'postTags': '" . addslashes(trim($gtm_tags)) . "',
+    'email': '" . get_the_author_meta('user_email') . "',";
+  } $gtmBuffer.= "
   }];
 </script>\n";
   print $gtmBuffer;
 }
-
 // Tell Wordpress to insert the datalayer and append it to the HEAD tag
 add_action('wp_head', 'dataLayer');
-
 ?>
+
